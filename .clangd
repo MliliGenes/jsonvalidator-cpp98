@@ -1,0 +1,13 @@
+CompileFlags:
+    Add: [-xc++, -Wall, -Wextra, -Wpedantic, -Wshadow, -Wformat=4, -Wcast-align, -Wconversion, -Wsign-conversion, -Wnull-dereference, -Werror=return-type, --std=c++98, -I/home/mhayyoun/code/cpp/json_validator/includes]
+    Compiler: c++
+Diagnostics:
+  ClangTidy:
+    Add: [clang-analyzer-*, cpp*]
+    Remove: [cppcoreguidelines-non-private-member-variables-in-classes, cppcoreguidelines-avoid-magic-numbers,
+            cppcoreguidelines-avoid-const-or-ref-data-members, cppcoreguidelines-pro-type-reinterpret-cast,
+            cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+            cppcoreguidelines-pro-bounds-constant-array-index, cppcoreguidelines-special-member-functions,
+            cppcoreguidelines-pro-type-vararg, cppcoreguidelines-avoid-non-const-global-variables,
+            cppcoreguidelines-pro-type-const-cast]
+    FastCheckFilter: None

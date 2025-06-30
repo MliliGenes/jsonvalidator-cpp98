@@ -1,0 +1,64 @@
+[
+    {
+        "server_name": "simple_server",
+        "host": "0.0.0.0",
+        "port": [
+            5000
+        ],
+        "default_root": "www/html",
+        "default_index": [
+            "index.html"
+        ],
+        "location": {
+            "/": {
+                "allowed_methods": [
+                    "GET"
+                ]
+            }
+        }
+    },
+    {
+        "server_name": "server1",
+        "host": "localhost",
+        "port": [
+            8080,
+            8081
+        ],
+        "redirects": {
+            "/old.html": "/index.html"
+        },
+        "list_dir": true,
+        "client_max_body_size": 102400000,
+        "error_pages": {
+            "404": "/errors/404.html",
+            "500": "/errors/500.html"
+        },
+        "default_root": "www/html",
+        "default_index": [
+            "index.html",
+            "index.py",
+            "index.php"
+        ],
+        "location": {
+            "/": {
+                "allowed_methods": [
+                    "DELETE",
+                    "GET"
+                ],
+                "auto_index": true,
+                "upload_dir": "www/html/uploads"
+            },
+            "/cgi": {
+                "allowed_methods": [
+                    "POST",
+                    "DELETE",
+                    "GET"
+                ],
+                "cgi": {
+                    ".py": "/usr/bin/python3",
+                    ".sh": "/bin/bash"
+                }
+            }
+        }
+    }
+]
