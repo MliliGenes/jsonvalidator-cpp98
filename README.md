@@ -88,7 +88,6 @@ delete config;
 ## Limitations ❌
 - C++98: No modern C++ features like smart pointers, STL JSON libs, or variadic templates
 - Manual Memory Management: You are responsible for deleting JSON values after use
-- No Exceptions: Errors are handled via error reporting, not exceptions
 - No Streaming / Incremental Parsing: Full JSON loads into memory
 
 ## Building 🔨
