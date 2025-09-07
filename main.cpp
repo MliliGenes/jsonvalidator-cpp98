@@ -1,6 +1,6 @@
 #include "Json.hpp"
 #include "JsonValidator.hpp"
-#include "schema.cpp"
+#include "schema.hpp"
 #include <iostream>
 
 int main() {

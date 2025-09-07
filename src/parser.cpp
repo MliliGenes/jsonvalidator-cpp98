@@ -87,22 +87,34 @@ token extract_decimal(char &c, std::istream &in) {
 
 token extract_json_types(char &c, std::istream &in) {
   token tk;
-  tk.token.push_back(c);
-  int i = 1;
-  int len = (c == 'f' ? 5 : 4);
-  while (i < len) {
-    if (in.eof())
-      break;
-    in.get(c);
-    tk.token.push_back(c);
-    i++;
+  tk.type = TK_UNDEFINED;
+  std::string expected;
+
+  if (c == 't')
+    expected = "true";
+  else if (c == 'f')
+    expected = "false";
+  else if (c == 'n')
+    expected = "null";
+
+  tk.token += c;
+  for (size_t i = 1; i < expected.length(); ++i) {
+    if (!in.get(c) || c != expected[i]) {
+      // Restore the read characters to the stream to not mess up the parsing
+      // for other tokens
+      for (size_t j = 0; j < tk.token.length(); j++) {
+        in.unget();
+      }
+      return tk;
+    }
+    tk.token += c;
   }
-  if (tk.token == "true" || tk.token == "false")
+
+  if (expected == "true" || expected == "false")
     tk.type = TK_BOOLEAN;
-  else if (tk.token == "null")
+  else if (expected == "null")
     tk.type = TK_NIL;
-  else
-    tk.type = TK_UNDEFINED;
+
   return tk;
 }
 
@@ -150,31 +162,34 @@ void Tokenizer::parse(std::istream &in, std::vector<token> &tokens) {
 }
 
 std::string match_token_name(token_type type) {
-  if (type == CB_OPEN)
+  switch (type) {
+  case CB_OPEN:
     return "CB_OPEN";
-  else if (type == CB_CLOSE)
+  case CB_CLOSE:
     return "CB_CLOSE";
-  else if (type == SB_OPEN)
+  case SB_OPEN:
     return "SB_OPEN";
-  else if (type == SB_CLOSE)
+  case SB_CLOSE:
     return "SB_CLOSE";
-  else if (type == TK_STRING)
+  case TK_STRING:
     return "STRING";
-  else if (type == TK_DOUBLE)
+  case TK_DOUBLE:
     return "DOUBLE";
-  else if (type == TK_NUMBER)
+  case TK_NUMBER:
     return "NUMBER";
-  else if (type == COMMA)
+  case COMMA:
     return "COMMA";
-  else if (type == COLON)
+  case COLON:
     return "COLON";
-  else if (type == TK_BOOLEAN)
+  case TK_BOOLEAN:
     return "BOOLEAN";
-  else if (type == TK_NIL)
+  case TK_NIL:
     return "NULL";
-  else if (type == END)
+  case END:
     return "END";
-  return "TK_UNDEFINED";
+  default:
+    return "TK_UNDEFINED";
+  }
 }
 
 std::ostream &operator<<(std::ostream &os, token &tk) {

@@ -100,16 +100,14 @@ ObjectValidator::ObjectValidator()
 }
 
 ObjectValidator::ObjectValidator(const ObjectValidator &obj)
-    : allowAdditional_(obj.allowAdditional_), matchMode_(obj.matchMode_),
-      emptyCheck(obj.emptyCheck), key_validator(NULL), val_validator(NULL),
-      last_(NULL) {
+    : AJsonValidator(obj), allowAdditional_(obj.allowAdditional_),
+      matchMode_(obj.matchMode_), emptyCheck(obj.emptyCheck),
+      key_validator(NULL), val_validator(NULL), last_(NULL) {
   if (obj.val_validator)
     val_validator = obj.val_validator->clone();
   if (obj.key_validator)
     key_validator = dynamic_cast<StringValidator *>(obj.key_validator->clone());
-  optional_ = obj.optional_;
   exceptedType_ = OBJECT;
-  hasDefault_ = obj.hasDefault_;
   if (obj.defaultValue_)
     defaultValue_ = dynamic_cast<JsonObject *>(obj.defaultValue_->clone());
   ValidatorMap::const_iterator it = obj.properties_.begin();
@@ -269,9 +267,9 @@ ArrayValidator::ArrayValidator()
 }
 
 ArrayValidator::ArrayValidator(const ArrayValidator &obj)
-    : validator_(NULL), min_(obj.min_), max_(obj.max_), defaultValue_(NULL) {
+    : AJsonValidator(obj), validator_(NULL), min_(obj.min_), max_(obj.max_),
+      defaultValue_(NULL) {
   exceptedType_ = ARRAY;
-  hasDefault_ = obj.hasDefault_;
   if (obj.defaultValue_)
     defaultValue_ = dynamic_cast<JsonArray *>(obj.defaultValue_->clone());
   if (obj.validator_) {
@@ -375,7 +373,8 @@ ArrayValidator::~ArrayValidator() {
 
 ORValidator::ORValidator() {}
 
-ORValidator::ORValidator(const ORValidator &obj) : msg_(obj.msg_) {
+ORValidator::ORValidator(const ORValidator &obj)
+    : AJsonValidator(obj), msg_(obj.msg_) {
   for (unsigned long i = 0; i < obj.conditions_.size(); i++) {
     conditions_.push_back(obj.conditions_[i]->clone());
   }
@@ -444,11 +443,10 @@ StringValidator::StringValidator()
 }
 
 StringValidator::StringValidator(const StringValidator &obj)
-    : min_(obj.min_), max_(obj.max_), checkMin(obj.checkMin),
-      checkMax(obj.checkMax), defaultValue_(obj.defaultValue_) {
-  optional_ = obj.optional_;
+    : AJsonValidator(obj), min_(obj.min_), max_(obj.max_),
+      checkMin(obj.checkMin), checkMax(obj.checkMax),
+      defaultValue_(obj.defaultValue_) {
   exceptedType_ = STRING;
-  hasDefault_ = obj.hasDefault_;
   std::map<std::string, funcCheck>::const_iterator it = obj.checkers.begin();
   for (; it != obj.checkers.end(); it++) {
     funcCheck copied = it->second;
@@ -625,11 +623,10 @@ NumberValidator::NumberValidator()
 }
 
 NumberValidator::NumberValidator(const NumberValidator &obj)
-    : min_(obj.min_), max_(obj.max_), checkMin(obj.checkMin),
-      checkMax(obj.checkMax), defaultValue_(obj.defaultValue_) {
-  optional_ = obj.optional_;
+    : AJsonValidator(obj), min_(obj.min_), max_(obj.max_),
+      checkMin(obj.checkMin), checkMax(obj.checkMax),
+      defaultValue_(obj.defaultValue_) {
   exceptedType_ = NUMBER;
-  hasDefault_ = obj.hasDefault_;
 }
 
 AJsonValidator *NumberValidator::clone() const {
@@ -711,8 +708,7 @@ NumberValidator::~NumberValidator() {}
 
 BoolValidator::BoolValidator() {}
 
-BoolValidator::BoolValidator(const BoolValidator &obj) {
-  hasDefault_ = obj.hasDefault_;
+BoolValidator::BoolValidator(const BoolValidator &obj) : AJsonValidator(obj) {
   defaultValue_ = obj.get_default();
 }
 
