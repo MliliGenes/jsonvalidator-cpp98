@@ -1,4 +1,4 @@
-#include "JsonValidator.hpp"
+#include "schema.hpp"
 
 ObjectValidator locationSchema = obj()
     .property("allowed_methods",arr().item(
